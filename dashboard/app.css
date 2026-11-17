@@ -1,0 +1,678 @@
+/* Token Radar — radar-2 dashboard theme, rewritten.
+   A light page, dark navy text, one amber signal colour for the ranking
+   and teal for growth. No web fonts and no images: system stacks only,
+   so the page renders the same offline. The tokens below are the whole
+   palette: page and card backgrounds, text and soft text, hairlines,
+   the signal colour and its dark form, up/down colours, and the pale
+   gold used to mark a selected row. */
+
+:root {
+  --page: #edf1f7;
+  --card: #ffffff;
+  --text: #0f1e33;
+  --soft: #55677f;
+  --line: #d5dde8;
+  --signal: #b45309;
+  --signal-deep: #92400e;
+  --up: #0f766e;
+  --down: #b91c1c;
+  --highlight: #fef3c7;
+  --track: #e3e9f1;
+  --hover-row: #f6f8fb;
+  --round-sm: 8px;
+  --round-lg: 14px;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --gap-1: 4px;
+  --gap-2: 8px;
+  --gap-3: 12px;
+  --gap-4: 16px;
+  --gap-5: 24px;
+  --gap-6: 32px;
+  --gap-7: 48px;
+}
+
+/* Base: border-box everywhere, a light page, comfortable reading type. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font: 400 15px/1.5 var(--sans);
+  color: var(--text);
+  background: var(--page);
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--signal);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* The skip link stays off screen until keyboard focus finds it. */
+.skip {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 20;
+  padding: var(--gap-2) var(--gap-4);
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.skip:focus {
+  left: var(--gap-4);
+  top: var(--gap-4);
+}
+
+/* Page shell: one centred column, generous air at the bottom. */
+.shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: var(--gap-5) var(--gap-6) var(--gap-7);
+}
+
+/* Masthead: brand left, snapshot facts right, one heavy rule below. */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--gap-5);
+  padding-bottom: var(--gap-4);
+  border-bottom: 2px solid var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-3);
+}
+
+.mark {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--signal);
+}
+
+.brand-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--soft);
+}
+
+.top-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gap-3);
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.top-meta span {
+  white-space: nowrap;
+}
+
+/* Intro: the claim on the left, the coverage facts on the right. */
+.lede {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: var(--gap-6);
+  padding: var(--gap-6) 0 var(--gap-5);
+}
+
+.lede p {
+  max-width: 62ch;
+  margin-top: var(--gap-2);
+  color: var(--soft);
+}
+
+.facts {
+  display: grid;
+  gap: var(--gap-2);
+  align-content: start;
+  padding-left: var(--gap-5);
+  border-left: 1px solid var(--line);
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gap-3);
+}
+
+.fact span {
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.fact b {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Top three: three cards with an amber top edge. */
+.spot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-3);
+  margin-bottom: var(--gap-5);
+}
+
+.spot-card {
+  padding: var(--gap-4);
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--signal);
+  border-radius: var(--round-lg);
+}
+
+.spot-card:hover {
+  border-color: var(--signal);
+}
+
+.spot-card .rank {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--signal-deep);
+}
+
+.spot-card h3 {
+  margin-top: var(--gap-1);
+  font-size: 18px;
+}
+
+.spot-card .big {
+  margin-top: var(--gap-2);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.spot-card .sub {
+  margin-top: var(--gap-1);
+  font-size: 12px;
+  color: var(--soft);
+}
+
+/* Filters: one wrapping row, labels above the controls. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--gap-3);
+  padding: var(--gap-4) 0;
+  border-top: 1px solid var(--line);
+}
+
+.field {
+  display: grid;
+  gap: var(--gap-1);
+}
+
+.field label {
+  font-size: 12px;
+  color: var(--soft);
+}
+
+.field input,
+.field select {
+  min-width: 150px;
+  min-height: 36px;
+  padding: 0 var(--gap-3);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--round-sm);
+}
+
+.field input {
+  min-width: 240px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-2);
+  min-height: 36px;
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--gap-1);
+  padding: 3px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--round-sm);
+}
+
+.tabs button {
+  min-height: 30px;
+  padding: 0 var(--gap-3);
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--soft);
+}
+
+.tabs button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--card);
+}
+
+.count {
+  align-self: center;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--soft);
+}
+
+/* Panels and the board table. */
+.panel {
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--round-lg);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: var(--gap-3);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--soft);
+}
+
+th button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+th button:hover {
+  color: var(--text);
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background: var(--hover-row);
+}
+
+tbody tr[data-selected="true"] {
+  background: var(--highlight);
+}
+
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.name {
+  display: grid;
+  gap: 2px;
+}
+
+.name b {
+  font-weight: 600;
+}
+
+.sub {
+  font-size: 12px;
+  color: var(--soft);
+}
+
+.pos {
+  color: var(--up);
+}
+
+.neg {
+  color: var(--down);
+}
+
+.implied {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-2);
+}
+
+.bar {
+  width: 110px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--track);
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--signal);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--soft);
+}
+
+.status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: var(--highlight);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--signal-deep);
+}
+
+/* The model explainer, below the board. */
+.model {
+  display: grid;
+  gap: var(--gap-3);
+  margin-top: var(--gap-4);
+  padding: var(--gap-5);
+}
+
+.formula {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--soft);
+  overflow-wrap: anywhere;
+}
+
+.factor-table {
+  width: 100%;
+  font-size: 13px;
+}
+
+.factor-table td {
+  padding: var(--gap-2) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.factor-table td:last-child {
+  text-align: right;
+  font-family: var(--mono);
+}
+
+/* Empty result: centred message with one way back. */
+.empty {
+  display: grid;
+  gap: var(--gap-3);
+  justify-items: center;
+  padding: var(--gap-7) var(--gap-5);
+  text-align: center;
+}
+
+.empty p {
+  color: var(--soft);
+}
+
+.button {
+  min-height: 36px;
+  padding: 0 var(--gap-4);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--round-sm);
+}
+
+.button.primary {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--card);
+}
+
+/* Detail view: a side panel pinned to the right edge. */
+.detail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(560px, 94vw);
+  max-height: 100%;
+  margin: 0 0 0 auto;
+  padding: var(--gap-5);
+  overflow-y: auto;
+  z-index: 10;
+  background: var(--card);
+  border-left: 1px solid var(--line);
+}
+
+.detail::backdrop {
+  background: rgba(15, 30, 51, 0.32);
+}
+
+.detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--gap-4);
+}
+
+.detail-head > div {
+  min-width: 0;
+}
+
+.detail-head .sub {
+  margin-top: var(--gap-1);
+  overflow-wrap: anywhere;
+}
+
+.detail h2 {
+  margin-top: var(--gap-1);
+}
+
+.detail .sub {
+  margin-top: var(--gap-1);
+}
+
+.close {
+  flex: none;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 var(--gap-2);
+  white-space: nowrap;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--round-sm);
+}
+
+.detail-section {
+  margin-top: var(--gap-5);
+  padding-top: var(--gap-4);
+  border-top: 1px solid var(--line);
+}
+
+.detail-section h3 {
+  margin-bottom: var(--gap-2);
+}
+
+.equation {
+  display: grid;
+  gap: var(--gap-2);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.equation div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-3);
+}
+
+.equation span {
+  color: var(--soft);
+}
+
+.steps {
+  display: grid;
+  gap: var(--gap-3);
+  margin: 0;
+  padding-left: var(--gap-5);
+}
+
+.steps li {
+  padding-left: var(--gap-1);
+}
+
+.steps b {
+  display: block;
+  font-weight: 500;
+}
+
+.cost {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--soft);
+}
+
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-2);
+  margin-top: var(--gap-2);
+}
+
+.flag {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--soft);
+}
+
+/* Narrow screens: stack the intro and the spotlight, full-width search. */
+@media (max-width: 900px) {
+  .shell {
+    padding: var(--gap-4);
+  }
+
+  .lede {
+    grid-template-columns: 1fr;
+    gap: var(--gap-4);
+  }
+
+  .facts {
+    padding-left: 0;
+    padding-top: var(--gap-4);
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .spot {
+    grid-template-columns: 1fr;
+  }
+
+  .field input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* Reduced motion: nothing here should animate. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
